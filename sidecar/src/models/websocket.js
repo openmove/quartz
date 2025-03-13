@@ -6,18 +6,22 @@ module.exports = ({
   log,
   confs
 }) => {
-  const {'server': {service}} = confs
+  const {'server': {wsServer}} = confs
   
   const sendBuildMessage = async () => {
     try {
-      const ws = new WebSocket(`ws://${service}:3001`)
+      log.info(`Connecting to quartz websocket at: ${wsServer}`)
+      const ws = new WebSocket(wsServer)
+
+      ws.on('open', () => {
+        log.debug('WebSocket connection established')
+        ws.send('rebuild')
+      })
 
       ws.on('error', (error) => {
         log.error(`Something went wrong inside websocket: ${error}`)
       })
 
-      ws.send('rebuild')
-      ws.close()
     } catch (error) {
       log.error(`Error establishing WebSocket connection: ${error}`)
     }

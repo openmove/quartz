@@ -1,13 +1,13 @@
 'use strict';
 
 const {
-  SERVER_PORT = '3001',
+  SERVER_PORT = '3555',
   SERVER_HOST = '0.0.0.0',
 
   GITHUB_TOKEN = '',
   GITHUB_OWNER = 'openmove',
   NEURON_GITHUB_REPO = 'neuron',
-  QUARTZ_SERVICE = 'docs.neuron-service.svc.cluster.local',
+  QUARTZ_SERVICE = 'http://localhost:3001',
 
   DEFAULT_TEMP_DIR_SUBPATH = '/github-neuron',
   CONTENTS_FOLDER = './tmp/contents'
@@ -18,7 +18,7 @@ module.exports = {
   'server': {
     'port': Number(SERVER_PORT),
     'host': SERVER_HOST,
-    'service': QUARTZ_SERVICE,
+    'wsServer': QUARTZ_SERVICE,
   },
   'github': {
     'token': GITHUB_TOKEN,
