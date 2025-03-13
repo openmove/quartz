@@ -9,15 +9,17 @@ module.exports = ({
   const {'server': {service}} = confs
   
   const sendBuildMessage = async () => {
-    const ws = new WebSocket(`ws://${service}:3001`)
     try {
-      ws.send('rebuild')
+      const ws = new WebSocket(`ws://${service}:3001`)
 
+      ws.on('error', (error) => {
+        log.error(`Something went wrong inside websocket: ${error}`)
+      })
+
+      ws.send('rebuild')
       ws.close()
     } catch (error) {
-      log.error('Error establishing WebSocket connection:', error)
-
-      ws.close()
+      log.error(`Error establishing WebSocket connection: ${error}`)
     }
   }
 

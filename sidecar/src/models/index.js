@@ -13,9 +13,13 @@ module.exports = async({
   const websocket = websocketModule({log, confs})
 
 
-  const updateContent = async (__, reply) => {
+  const updateContent = useCase => async (__, reply) => {
     const tempDir = await files.createTempDir()
-    
+    const {
+      isHttp,
+      sendWsMessage
+    } = useCase
+
     try {
       log.info('Updating content')
 
@@ -37,13 +41,15 @@ module.exports = async({
 
       log.info('💎 Content updated to quartz 💎')
       
-      try {
-        await websocket.sendBuildMessage()
-      } catch (error) {
-        log.error('Impossible to send build message via websocket:', error)
+      if (sendWsMessage) {
+        try {
+          await websocket.sendBuildMessage()
+        } catch (error) {
+          log.error('Impossible to send build message via websocket:', error)
+        }
       }
 
-      if (reply == null) {
+      if (!isHttp) {
         return
       }
 

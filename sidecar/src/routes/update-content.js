@@ -7,6 +7,9 @@ module.exports = async function updateContent(app, {
   app.route({
     method: 'GET',
     url: '/update-content',
-    handler: updateContentFunction
+    handler: updateContentFunction({
+      'isHttp': true,
+      'sendWsMessage': true
+    })
   })
 }

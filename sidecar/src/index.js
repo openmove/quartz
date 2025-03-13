@@ -28,7 +28,11 @@ const modelsFactory = require('./models');
     app.register(route, {log, confs, updateContent, statusTable, 'prefix': '/sidecar'})
   }
 
-  await updateContent()
+  const updateContentFunction = updateContent({
+    'isHttp': false,
+    'sendWsMessage': false
+  })
+  updateContentFunction()
   
   app.listen({
     port,
