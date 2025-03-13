@@ -132,6 +132,7 @@ async function startServing(
     persistent: true,
     cwd: argv.directory,
     ignoreInitial: true,
+    depth: 99,
   })
 
   const buildFromEntry = argv.fastRebuild ? partialRebuildFromEntrypoint : rebuildFromEntrypoint

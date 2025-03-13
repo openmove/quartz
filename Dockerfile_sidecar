@@ -1,0 +1,12 @@
+FROM node:22.13.0-alpine3.21 AS worker
+RUN npm install -g pnpm@9.14.2
+RUN apk add --no-cache \
+  git \
+  bash 
+
+WORKDIR /home/logic
+ADD ./sidecar sidecar
+WORKDIR /home/logic/sidecar
+RUN pnpm i --prod
+
+CMD ["pnpm", "start"]

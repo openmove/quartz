@@ -1,0 +1,28 @@
+{
+  "name": "sidecar",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "private": true,
+  "entrypoint": "src/index.ts",
+  "author": "andrea.iossa@openmove.com",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "9.18.0",
+    "eslint-plugin-promise": "7.2.1",
+    "pino-pretty": "13.0.0"
+  },
+  "dependencies": {
+    "@octokit/rest": "21.0.2",
+    "axios": "^1.8.2",
+    "fastify": "5.2.1",
+    "pino": "9.6.0",
+    "unzipper": "0.12.3",
+    "uuid": "9.0.0"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  }
+}

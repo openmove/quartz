@@ -1,0 +1,22 @@
+_out
+
+# Logs
+*.log
+
+# Runtime data
+*.pid
+*.seed
+*.pid.lock
+
+# IDE customization files
+.vscode/
+
+# Dependency directories
+node_modules/
+**/node_modules/
+
+# dotenv environment variables file
+.env
+
+# OS X temporary files
+.DS_Store
