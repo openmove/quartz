@@ -4,7 +4,7 @@ RUN apk add --no-cache \
   bash
 
 WORKDIR /home/logic
-RUN git clone https://github.com/jackyzha0/quartz.git
+ADD ./quartz quartz
 WORKDIR /home/logic/quartz
 RUN npm i
 

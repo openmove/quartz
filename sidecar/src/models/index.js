@@ -11,10 +11,6 @@ module.exports = async({
   const github = await githubModule({log, confs})
   const files = filesModule({log, confs})
   
-
-  const markAsDead = status => {
-  }
-
   const updateContent = async (__, reply) => {
     const tempDir = await files.createTempDir()
     
