@@ -128,21 +128,22 @@ async function startServing(
     lastBuildMs: 0,
   }
 
-  const watcher = chokidar.watch(".", {
-    persistent: true,
-    cwd: argv.directory,
-    ignoreInitial: true,
-    depth: 99,
-  })
+  // const watcher = chokidar.watch(".", {
+  //   persistent: true,
+  //   cwd: argv.directory,
+  //   ignoreInitial: true,
+  //   depth: 99,
+  // })
 
-  const buildFromEntry = argv.fastRebuild ? partialRebuildFromEntrypoint : rebuildFromEntrypoint
-  watcher
-    .on("add", (fp) => buildFromEntry(fp as string, "add", clientRefresh, buildData))
-    .on("change", (fp) => buildFromEntry(fp as string, "change", clientRefresh, buildData))
-    .on("unlink", (fp) => buildFromEntry(fp as string, "delete", clientRefresh, buildData))
+  // const buildFromEntry = argv.fastRebuild ? partialRebuildFromEntrypoint : rebuildFromEntrypoint
+  // watcher
+  //   .on("add", (fp) => buildFromEntry(fp as string, "add", clientRefresh, buildData))
+  //   .on("change", (fp) => buildFromEntry(fp as string, "change", clientRefresh, buildData))
+  //   .on("unlink", (fp) => buildFromEntry(fp as string, "delete", clientRefresh, buildData))
 
   return async () => {
-    await watcher.close()
+    console.log("watcher disabled")
+    // await watcher.close()
   }
 }
 

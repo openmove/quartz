@@ -435,12 +435,22 @@ export async function handleBuild(argv) {
     })
     server.listen(argv.port)
     const wss = new WebSocketServer({ port: argv.wsPort })
-    wss.on("connection", (ws) => connections.push(ws))
+    wss.on("connection", (ws) => {
+      connections.push(ws)
+
+      ws.on("message", (message) => {
+        if (message.toString() === "rebuild") {
+          build(clientRefresh)
+        }
+      })
+    })
     console.log(
       chalk.cyan(
         `Started a Quartz server listening at http://localhost:${argv.port}${argv.baseDir}`,
       ),
     )
+
+
     console.log("hint: exit with ctrl+c")
     const paths = await globby(["**/*.ts", "**/*.tsx", "**/*.scss", "package.json"])
     chokidar

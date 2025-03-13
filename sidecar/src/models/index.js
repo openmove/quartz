@@ -2,7 +2,7 @@
 
 const githubModule = require('./github')
 const filesModule = require('./files')
-
+const websocketModule = require('./websocket')
 module.exports = async({
   log,
   confs
@@ -10,7 +10,9 @@ module.exports = async({
   
   const github = await githubModule({log, confs})
   const files = filesModule({log, confs})
-  
+  const websocket = websocketModule({log, confs})
+
+
   const updateContent = async (__, reply) => {
     const tempDir = await files.createTempDir()
     
@@ -35,6 +37,12 @@ module.exports = async({
 
       log.info('💎 Content updated to quartz 💎')
       
+      try {
+        await websocket.sendBuildMessage()
+      } catch (error) {
+        log.error('Impossible to send build message via websocket:', error)
+      }
+
       if (reply == null) {
         return
       }
