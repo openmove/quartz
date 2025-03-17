@@ -1,7 +1,9 @@
 'use strict';
 
 module.exports = async function updateContent(app, {
-  'updateContent': updateContentFunction
+  log,
+  updateContent,
+  sendBuildMessage,
 }) {
 
   app.route({
@@ -9,8 +11,8 @@ module.exports = async function updateContent(app, {
     url: '/update-content',
     handler: async (__, reply) => {
       try {
-        await updateContentFunction()
-        await websocket.sendBuildMessage()
+        await updateContent()
+        await sendBuildMessage()
 
         reply.status(200).send({'message': 'Content updated'})
       } catch (error) {
