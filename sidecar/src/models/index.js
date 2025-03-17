@@ -3,6 +3,7 @@
 const githubModule = require('./github')
 const filesModule = require('./files')
 const websocketModule = require('./websocket')
+
 module.exports = async({
   log,
   confs
@@ -10,15 +11,10 @@ module.exports = async({
   
   const github = await githubModule({log, confs})
   const files = filesModule({log, confs})
-  const websocket = websocketModule({log, confs})
+  const {sendBuildMessage} = websocketModule({log, confs})
 
-
-  const updateContent = useCase => async (__, reply) => {
+  const updateContent = async() => {
     const tempDir = await files.createTempDir()
-    const {
-      isHttp,
-      sendWsMessage
-    } = useCase
 
     try {
       log.info('Updating content')
@@ -40,38 +36,21 @@ module.exports = async({
       await files.updateContents(contentsFolder)
 
       log.info('💎 Content updated to quartz 💎')
-      
-      if (sendWsMessage) {
-        try {
-          await websocket.sendBuildMessage()
-        } catch (error) {
-          log.error('Impossible to send build message via websocket:', error)
-        }
-      }
+      return;
 
-      if (!isHttp) {
-        return
-      }
-
-      reply.status(200).send({'message': 'Content updated' })
-      return
     } catch (error) {
       log.error(error)
-      
-      if (reply == null) {
-        return
-      }
+      return;
 
-      reply.status(500).send({'message': 'Something went wrong' })
-      return
     } finally {
       await files.deleteTempDir(tempDir)
     }
   }
 
   return {
-    github,
     files,
-    updateContent
+    github,
+    updateContent,
+    sendBuildMessage
   }
 }

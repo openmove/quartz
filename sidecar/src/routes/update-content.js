@@ -7,9 +7,16 @@ module.exports = async function updateContent(app, {
   app.route({
     method: 'GET',
     url: '/update-content',
-    handler: updateContentFunction({
-      'isHttp': true,
-      'sendWsMessage': true
-    })
+    handler: async (__, reply) => {
+      try {
+        await updateContentFunction()
+        await websocket.sendBuildMessage()
+
+        reply.status(200).send({'message': 'Content updated'})
+      } catch (error) {
+        log.error(error)
+        reply.status(500).send({'message': 'Error updating content'})
+      }
+    }
   })
 }

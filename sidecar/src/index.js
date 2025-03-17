@@ -21,18 +21,22 @@ const modelsFactory = require('./models');
       , {port, host} = server;
   
   log.info('Initializing models')
-  const {updateContent} = await modelsFactory({log, confs})
+  const {updateContent, sendBuildMessage} = await modelsFactory({log, confs})
 
   log.info('Registering routes')
   for (const route of Object.values(routes)) {
-    app.register(route, {log, confs, updateContent, statusTable, 'prefix': '/sidecar'})
+    app.register(route, {
+      log,
+      confs,
+      statusTable,
+      updateContent,
+      sendBuildMessage,
+      'prefix': '/sidecar'
+    })
   }
 
-  const updateContentFunction = updateContent({
-    'isHttp': false,
-    'sendWsMessage': false
-  })
-  updateContentFunction()
+  log.info('Updating content at startup...')
+  await updateContent()
   
   app.listen({
     port,

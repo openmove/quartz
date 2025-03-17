@@ -10,9 +10,13 @@ const {
   QUARTZ_SERVICE = 'http://localhost:3001',
 
   DEFAULT_TEMP_DIR_SUBPATH = '/github-neuron',
-  CONTENTS_FOLDER = './tmp/contents'
+  CONTENTS_FOLDER = './tmp/contents',
+  TARGET_FOLDER = false,
+  EXCLUDE_FILES = '',
+  
 } = process.env
 
+const excludeFilesList = EXCLUDE_FILES.split(',')
 
 module.exports = {
   'server': {
@@ -26,7 +30,9 @@ module.exports = {
     'neuronRepo': NEURON_GITHUB_REPO,
   },
   'fileSystem': {
+    excludeFilesList,
     'defaultSubPath': DEFAULT_TEMP_DIR_SUBPATH,
     'contentsFolder': CONTENTS_FOLDER,
+    'targetFolder': TARGET_FOLDER,
   }
 }

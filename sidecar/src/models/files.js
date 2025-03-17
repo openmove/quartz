@@ -14,7 +14,14 @@ module.exports = ({
   confs
 }) => {
 
-  const {'fileSystem': {defaultSubPath, contentsFolder}} = confs;
+  const {
+    'fileSystem': {
+      defaultSubPath,
+      contentsFolder,
+      targetFolder,
+      excludeFilesList
+    }
+  } = confs;
 
   const createTempDir = async() => {
     const randomId = uuid();
@@ -77,16 +84,22 @@ module.exports = ({
   }
 
 
-  const findContentsRecursive = async targetFolder => {
-    log.debug({targetFolder}, 'Looking for contents folder...')
-    const files = await promises.readdir(targetFolder)
+  const findContentsRecursive = async inspectFolder => {
+    log.debug({inspectFolder}, 'Looking for contents folder...')
+    
+    if (!targetFolder) {
+      log.debug({inspectFolder}, 'Contents folder is entire folder. Skipping search of contents folder.')
+      return inspectFolder
+    }
+    
+    const files = await promises.readdir(inspectFolder)
     
     for (const aFile of files) {
-      const folderToCheck = path.join(targetFolder, aFile)
+      const folderToCheck = path.join(inspectFolder, aFile)
       const fileStats = await promises.lstat(folderToCheck)
 
       if (fileStats.isDirectory()) {
-        if (aFile === 'contents') {
+        if (aFile === targetFolder) {
           log.info({folderToCheck}, 'Found contents folder')
           
           return folderToCheck
@@ -114,11 +127,22 @@ module.exports = ({
         await promises.rm(toRemove, {recursive: true});
       }
     } else {
-      log.debug({contentsFolder}, 'Content folder not found')
+      log.debug({contentsFolder}, 'Content folder not found, creating it...')
 
       await promises.mkdir(contentsFolder, {recursive: true})
     }
 
+    log.debug({newContentsFolder}, 'Removing files to exclude...')
+    if (excludeFilesList.length > 0) {
+      for (const aFile of await promises.readdir(newContentsFolder)) {
+        if (excludeFilesList.includes(aFile)) {
+          const toRemove = path.join(newContentsFolder, aFile)
+        
+          log.debug({toRemove}, 'Removing file to exclude')
+          await promises.rm(toRemove, {recursive: true})
+        }
+      }
+    }
     log.debug({newContentsFolder, contentsFolder}, 'Copying new contents...')
     await promises.cp(newContentsFolder, contentsFolder, {recursive: true})
 
