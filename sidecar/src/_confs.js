@@ -13,7 +13,7 @@ const {
   CONTENTS_FOLDER = './tmp/contents',
   TARGET_FOLDER = false,
   EXCLUDE_FILES = '',
-  
+
 } = process.env
 
 const excludeFilesList = EXCLUDE_FILES.split(',')

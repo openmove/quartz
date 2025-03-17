@@ -20,6 +20,10 @@ module.exports = ({
       contentsFolder,
       targetFolder,
       excludeFilesList
+    },
+    'github': {
+      owner,
+      neuronRepo
     }
   } = confs;
 
@@ -88,8 +92,12 @@ module.exports = ({
     log.debug({inspectFolder}, 'Looking for contents folder...')
     
     if (!targetFolder) {
-      log.debug({inspectFolder}, 'Contents folder is entire folder. Skipping search of contents folder.')
-      return inspectFolder
+      const inspectFolderSplitted = inspectFolder.split('/')
+      const lastPath = inspectFolderSplitted[inspectFolderSplitted.length - 1]
+
+      if (lastPath.includes(`${owner}-${neuronRepo}-`)) {  // exclude first iteration
+        return inspectFolder
+      }
     }
     
     const files = await promises.readdir(inspectFolder)
